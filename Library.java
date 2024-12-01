@@ -65,8 +65,27 @@ public class Library {
      * exception if book doesnt exist or there are no more copies available.
      */
     public void checkout(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+      if (isbn == null || isbn.isEmpty()) {
+            throw new IllegalArgumentException("ISBN cannot be null or empty.");
+        }
+    
+        // search for the book 
+        Book bookToCheckout = bst.findByISBN(isbn);
+    
+        if (bookToCheckout == null) {
+            // we dont carry this book in our library
+            throw new IllegalArgumentException(" We dont carry the book with ISBN " + isbn + " .");
+        }
+    
+        // checking if we have enough copies avaliable. 
+        if (bookToCheckout.getNumberOfCopies() <= 0) {
+            throw new IllegalArgumentException("No copies of the book with ISBN " + isbn + " are available for checkout.");
+        }
+    
+        // checkout the book, reduce the number of copies 
+        bookToCheckout.addCopies(-1); // decrease copies by 1
+        System.out.println("Successfully checked out: " + bookToCheckout.getTitle() + " by " + bookToCheckout.getAuthor());
+    
     }
 
     /**
