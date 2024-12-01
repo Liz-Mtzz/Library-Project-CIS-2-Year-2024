@@ -67,6 +67,10 @@ public class Library {
     /**
      * Checks out the given book from the library. Throw the appropriate
      * exception if book doesnt exist or there are no more copies available.
+     * @param isbn The ISBN of the book to check out
+     * @throws IllegalArgumentException if the ISBN is null or empty.
+     * @throws IllegalArgumentException if the book with the specified ISBN is not found in the library.
+     * @throws IllegalArgumentException if there are no available copies of the book to check out
      * @Author Elizabeth Martinez Mendoza
      */
 	
