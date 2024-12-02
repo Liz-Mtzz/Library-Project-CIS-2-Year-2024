@@ -63,10 +63,35 @@ public class Library {
     /**
      * Checks out the given book from the library. Throw the appropriate
      * exception if book doesnt exist or there are no more copies available.
+     * @param isbn The ISBN of the book to check out
+     * @throws IllegalArgumentException if the ISBN is null or empty.
+     * @throws IllegalArgumentException if the book with the specified ISBN is not found in the library.
+     * @throws IllegalArgumentException if there are no available copies of the book to check out
+     * @Author Elizabeth Martinez Mendoza
      */
+	
     public void checkout(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+      if (isbn == null || isbn.isEmpty()) {
+            throw new IllegalArgumentException("ISBN cannot be null or empty.");
+        }
+    
+        // search for the book 
+        Book bookToCheckout = bst.findByISBN(isbn);
+    
+        if (bookToCheckout == null) {
+            // we dont carry this book in our library
+            throw new IllegalArgumentException(" We dont carry the book with ISBN " + isbn + " .");
+        }
+    
+        // checking if we have enough copies avaliable. 
+        if (bookToCheckout.getNumberOfCopies() <= 0) {
+            throw new IllegalArgumentException("No copies of the book with ISBN " + isbn + " are available for checkout.");
+        }
+    
+        // checkout the book, reduce the number of copies 
+        bookToCheckout.addCopies(-1); // decrease copies by 1
+        System.out.println("Successfully checked out: " + bookToCheckout.getTitle() + " by " + bookToCheckout.getAuthor());
+    
     }
 
     /**
