@@ -231,12 +231,23 @@ public class UnorderedLinkedList<T> {
 				// e.g. add Star_Trek Gene_Roddenberry ISBN-1234 1965 10
 				// NOTE: If a book already exists in the library, then the number of copies should be incremented by this amount.
 				// Do appropriate error checking here.
-			} else if (line.startsWith("checkout")) {
-				// TODO: Implement this case.
-				// The format of the line is
-				// checkout isbn
-				// e.g. checkout ISBN-1234
-				// NOTE: If the book doesnt exist in the library, then the code should print an error.
+			} else if (line.startsWith("checkout")) { // @Author Elizabeth Martinez Mendoza 
+				try { 
+					String [] parts = line.split(" "); // split  the input into 2 parts
+					if (parts.length !=2){ // if the input does not have 2 parts, return a error message 
+						System.out.println("Invalid input. Please use the format: checkout <isbn>");
+					} else {
+						String isbn = parts[1]; // if correct ussage then use the ISBN portion
+						try {
+							library.checkout(isbn); // find the book via findByISBN
+							System.out.println("Book with ISBN " + isbn + " checked out successfully."); // if successful, this message 
+						} catch (IllegalArgumentException e) {
+							System.out.println(e.getMessage()); // handles invalid ISBNs
+						}
+					}
+				} catch (Exception e) {
+					 System.out.println("An unexpected error occurred: " + e.getMessage()); // other errors that might occur 
+				}
 			} else if (line.startsWith("findByTitleAndAuthor")) {
     try {
         /**
