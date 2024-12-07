@@ -619,3 +619,68 @@ private void adjustParent(TreeNode nodeToRemove, TreeNode childOfRemoved) {
         }
     }
 }
+
+/**
+ * An unordered linked list class. This list allows for adding elements to
+ * the front of the list.
+ *
+ * @param <T> generic type elements in this list.
+ * @author Anzac Houchen
+ * @author anzac.shelby@gmail.com
+ */
+public class UnorderedLinkedList<T> {
+
+    private Node<T> head;  // The head node of the linked list
+
+    public Node<T> getHead() {
+        return head;
+    }
+
+    /**
+     * Constructor. Creates an empty list.
+     *
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public UnorderedLinkedList() {
+        head = null;  // Initialize the list with no nodes
+    }
+
+    /**
+     * Adds a Node to the front of the list.
+     *
+     * @param data A book or other element to add to the list
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public void add(T data) {
+        Node<T> newNode = new Node<>(data);  // Create a new node with the data
+        newNode.next = head;  // Set the new node's next reference to the current head
+        head = newNode;  // Update the head to point to the new node
+    }
+
+    /**
+     * Inner class to create nodes for the linked list.
+     *
+     * @param <T> Data stored in the node (e.g., a book)
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public class Node<T> {  // Add the generic <T> to the Node class
+
+        T data;  // Data held by the node
+        Node<T> next;  // Reference to the next node in the list
+
+        /**
+         * Constructor. Makes a node with data as input.
+         *
+         * @param data The data for this node (e.g., a book object in the Library)
+         * @author Anzac Houchen
+         * @author anzac.shelby@gmail.com
+         */
+        public Node(T data) {
+            this.data = data;  // Initialize the node with the provided data
+            this.next = null;  // By default, the next reference is null
+        }
+    }
+}
