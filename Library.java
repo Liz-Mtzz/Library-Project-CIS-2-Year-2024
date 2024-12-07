@@ -334,3 +334,288 @@ public class Library {
 		}
 	}
 }
+
+public class BST {
+
+    private TreeNode root; // The root node of the tree
+    private int size; // The number of nodes in the tree
+
+    /** 
+     * Constructs an empty BinarySearchTree.
+     * 
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public BST() {
+        this.root = null;
+        size = 0;
+    }
+
+    /**
+     * Returns the number of nodes in the tree.
+     * 
+     * @return the size of the tree
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Inserts a new book into the tree or updates the number of copies
+     * if the book already exists.
+     * 
+     * @param key   the ISBN of the book
+     * @param value the Book object to be inserted
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public void add(String key, Book value) {
+        if (this.root != null) {
+            put(key, value, this.root);
+        } else {
+            this.root = new TreeNode(key, value, value.getNumberOfCopies());
+            size++;
+        }
+    }
+
+    /**
+     * Helper method to insert a new book or update an existing book's copies.
+     * 
+     * @param key          the ISBN of the book
+     * @param value        the Book object to be inserted
+     * @param currentNode  the current node in the traversal
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    private void put(String key, Book value, TreeNode currentNode) {
+        int cmp = key.compareTo(currentNode.key);
+        if (cmp < 0) {
+            if (currentNode.leftChild != null) {
+                put(key, value, currentNode.leftChild);
+            } else {
+                currentNode.leftChild = new TreeNode(key, value, value.getNumberOfCopies(), currentNode);
+                size++;
+            }
+        } else if (cmp > 0) {
+            if (currentNode.rightChild != null) {
+                put(key, value, currentNode.rightChild);
+            } else {
+                currentNode.rightChild = new TreeNode(key, value, value.getNumberOfCopies(), currentNode);
+                size++;
+            }
+        } else {
+            // Update existing book's copies
+            currentNode.value.addCopies(value.getNumberOfCopies());
+            currentNode.numberOfCopiesAvailable += value.getNumberOfCopies(); // Update copies available
+        }
+    }
+
+    /**
+     * Retrieves a book by its ISBN.
+     * 
+     * @param key the ISBN of the book to retrieve
+     * @return the Book object if found, or null if not found
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public Book get(String key) {
+        if (this.root != null) {
+            TreeNode result = get(key, this.root);
+            if (result != null) {
+                return result.value;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Helper method to find a book in the tree.
+     * 
+     * @param key          the ISBN of the book to find
+     * @param currentNode  the current node in the traversal
+     * @return the TreeNode containing the book or null if not found
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    private TreeNode get(String key, TreeNode currentNode) {
+        if (currentNode == null) {
+            return null;
+        }
+        int cmp = key.compareTo(currentNode.key);
+        if (cmp == 0) {
+            return currentNode;
+        } else if (cmp < 0) {
+            return get(key, currentNode.leftChild);
+        } else {
+            return get(key, currentNode.rightChild);
+        }
+    }
+
+    /**
+     * Checks if the tree contains a book with the specified ISBN.
+     * 
+     * @param key the ISBN of the book to check
+     * @return true if the tree contains the book, false otherwise
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    public boolean containsKey(String key) {
+        return get(key) != null;
+    }
+
+    /**
+     * A private inner class representing a node in the binary search tree.
+     * 
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    class TreeNode {
+        String key; // ISBN
+        Book value; // Book object
+        int numberOfCopiesAvailable; // Number of copies available
+        TreeNode leftChild; // Left child node
+        TreeNode rightChild; // Right child node
+        TreeNode parent; // Parent node
+
+        /**
+         * Constructs a new TreeNode with the specified key and value.
+         * 
+         * @param key                the ISBN of the book
+         * @param value              the Book object
+         * @param numberOfCopies     the number of copies available
+         * @author Anzac Houchen
+         * @author anzac.shelby@gmail.com
+         */
+        TreeNode(String key, Book value, int numberOfCopies) {
+            this(key, value, numberOfCopies, null);
+        }
+
+        /**
+         * Constructs a new TreeNode with the specified key, value, and parent.
+         * 
+         * @param key                the ISBN of the book
+         * @param value              the Book object
+         * @param numberOfCopies     the number of copies available
+         * @param parent             the parent node
+         * @author Anzac Houchen
+         * @author anzac.shelby@gmail.com
+         */
+        TreeNode(String key, Book value, int numberOfCopies, TreeNode parent) {
+            this.key = key;
+            this.value = value;
+            this.numberOfCopiesAvailable = numberOfCopies;
+            this.parent = parent;
+        }
+
+        // Additional methods for finding minimum child and successor as needed
+    }
+
+    /**
+     * Finds the minimum child of a given node.
+     * 
+     * @param node the node to search from
+     * @return the TreeNode with the minimum key
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    private TreeNode findMinimumChild(TreeNode node) {
+        while (node.leftChild != null) {
+            node = node.leftChild;
+        }
+        return node;
+    }
+
+    /**
+     * Finds the successor of a given node in the binary search tree.
+     * 
+     * @param node the node to find the successor for
+     * @return the successor TreeNode or null if none exists
+     * @author Anzac Houchen
+     * @author anzac.shelby@gmail.com
+     */
+    private TreeNode findSuccessor(TreeNode node) {
+        if (node.rightChild != null) {
+            return findMinimumChild(node.rightChild);
+        }
+        TreeNode parent = node.parent;
+        while (parent != null && node == parent.rightChild) {
+            node = parent;
+            parent = parent.parent;
+        }
+        return parent;
+    }
+
+    /**
+ * Removes a book from the tree by its ISBN.
+ * 
+ * @param isbn the ISBN of the book to remove
+ * @return the Book object that was removed
+ * @throws NoSuchElementException if the book with the specified ISBN is not found
+ * @author Anzac Houchen
+ */
+public Book remove(String isbn) {
+    TreeNode nodeToRemove = get(isbn, root);
+    if (nodeToRemove == null) {
+        throw new NoSuchElementException(isbn + " not in tree.");
+    }
+    Book oldValue = nodeToRemove.value; // Store the value for return
+    removeNode(nodeToRemove);
+    size--;
+    return oldValue;
+}
+
+/**
+ * Helper method to remove a node from the tree.
+ * Handles three cases: no children, one child, or two children.
+ * 
+ * @param currentNode the node to remove
+ * @author Anzac Houchen
+ */
+private void removeNode(TreeNode currentNode) {
+    if (currentNode.leftChild == null && currentNode.rightChild == null) {
+        // Case 1: No children
+        if (currentNode.parent.leftChild == currentNode) {
+            currentNode.parent.leftChild = null;
+        } else {
+            currentNode.parent.rightChild = null;
+        }
+    } else if (currentNode.leftChild != null && currentNode.rightChild != null) {
+        // Case 3: Two children
+        TreeNode successor = findSuccessor(currentNode);
+        currentNode.key = successor.key;
+        currentNode.value = successor.value;
+        removeNode(successor);
+    } else {
+        // Case 2: One child
+        TreeNode child = (currentNode.leftChild != null) ? currentNode.leftChild : currentNode.rightChild;
+        adjustParent(currentNode, child);
+    }
+}
+
+/**
+ * Adjusts the parent node's child reference when removing a node.
+ * 
+ * @param nodeToRemove the node that is being removed
+ * @param childOfRemoved the child of the removed node
+ * @author Anzac Houchen
+ */
+private void adjustParent(TreeNode nodeToRemove, TreeNode childOfRemoved) {
+    if (nodeToRemove.parent != null) {
+        if (nodeToRemove.parent.leftChild == nodeToRemove) {
+            nodeToRemove.parent.leftChild = childOfRemoved;
+        } else {
+            nodeToRemove.parent.rightChild = childOfRemoved;
+        }
+        if (childOfRemoved != null) {
+            childOfRemoved.parent = nodeToRemove.parent;
+        }
+    } else {
+        root = childOfRemoved; // If the removed node is root
+        if (childOfRemoved != null) {
+            childOfRemoved.parent = null;
+            }
+        }
+    }
+}
